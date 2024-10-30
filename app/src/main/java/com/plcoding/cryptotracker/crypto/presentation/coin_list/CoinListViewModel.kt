@@ -2,7 +2,6 @@ package com.plcoding.cryptotracker.crypto.presentation.coin_list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.plcoding.cryptotracker.core.domain.util.onError
 import com.plcoding.cryptotracker.core.domain.util.onSuccess
 import com.plcoding.cryptotracker.crypto.data.networking.RemoteCoinDataSource
@@ -21,7 +20,7 @@ class CoinListViewModel(
 ): ViewModel() {
 
     private val _state = MutableStateFlow(CoinListState())
-    val state = _state.asStateFlow()
+    val state = _state // тут почему-то было .asStateFlow()
         .onStart { loadCoins() }
         .stateIn(
             viewModelScope,
@@ -47,7 +46,7 @@ class CoinListViewModel(
                 .getCoins()
                 .onSuccess { coins ->
                     _state.update { it.copy(
-                        isLoading = true,
+                        isLoading = false, // тут было true
                         coins = coins.map { it.toCoinUi() }
                     ) }
                 }
@@ -56,5 +55,4 @@ class CoinListViewModel(
                 }
         }
     }
-
 }
